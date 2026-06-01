@@ -113,4 +113,36 @@ public class IssueController {
     public ResponseEntity<ApiResponse<List<IssueResponse>>> getEscalatedIssues() {
         return ResponseEntity.ok(ApiResponse.ok(issueService.getEscalatedIssues()));
     }
+
+    // Get detailed issue view with comments and activities
+    @GetMapping("/{id}/detail")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'CSR', 'MANAGER')")
+    public ResponseEntity<ApiResponse<DetailedIssueDto>> getIssueDetail(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(ApiResponse.ok("Issue details retrieved",
+                issueService.getDetailedIssue(id, userDetails.getUsername())));
+    }
+
+    // CSR: add/update solution
+    @PostMapping("/{id}/solution")
+    @PreAuthorize("hasRole('CSR')")
+    public ResponseEntity<ApiResponse<DetailedIssueDto>> addSolution(
+            @PathVariable Long id,
+            @Valid @RequestBody SolutionRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(ApiResponse.ok("Solution added",
+                issueService.addSolution(id, request.getSolution(), userDetails.getUsername())));
+    }
+
+    // Manager: add/update notes on escalated issue
+    @PostMapping("/{id}/manager-notes")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<ApiResponse<DetailedIssueDto>> addManagerNotes(
+            @PathVariable Long id,
+            @Valid @RequestBody ManagerNotesRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(ApiResponse.ok("Manager notes added",
+                issueService.addManagerNotes(id, request.getManagerNotes(), userDetails.getUsername())));
+    }
 }

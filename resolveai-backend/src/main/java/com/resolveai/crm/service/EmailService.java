@@ -175,4 +175,44 @@ public class EmailService {
                 """, managerName, issueId, issueTitle, csrName, escalationReason);
         sendEmail(managerEmail, subject, body, "ISSUE_ESCALATED", issueId);
     }
+
+    public void sendSolutionNotification(String customerEmail, String customerName, Long issueId, String issueTitle, String solution, String csrName) {
+        String subject = "Solution Provided for Your Issue #" + issueId;
+        String body = String.format("""
+                Dear %s,
+                
+                Our support team has provided a solution for your issue: %s
+                
+                <strong>Solution:</strong>
+                %s
+                
+                The support representative %s will be updating you further with the resolution status.
+                
+                Please reply if you have any questions.
+                
+                Best regards,
+                ResolveAI CRM Support Team
+                """, customerName, issueTitle, solution, csrName);
+        sendEmail(customerEmail, subject, body, "SOLUTION_PROVIDED", issueId);
+    }
+
+    public void sendManagerInputNotification(String customerEmail, String customerName, Long issueId, String issueTitle, String managerNotes) {
+        String subject = "Manager Review for Your Issue #" + issueId;
+        String body = String.format("""
+                Dear %s,
+                
+                Your escalated issue has been reviewed by our management team.
+                
+                <strong>Manager's Input:</strong>
+                %s
+                
+                We are working on the best resolution for you. You will be notified once further action is taken.
+                
+                Thank you for your patience.
+                
+                Best regards,
+                ResolveAI CRM Support Team
+                """, customerName, managerNotes);
+        sendEmail(customerEmail, subject, body, "MANAGER_INPUT_PROVIDED", issueId);
+    }
 }

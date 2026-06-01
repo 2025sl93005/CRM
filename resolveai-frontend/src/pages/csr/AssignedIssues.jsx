@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getAssignedIssues, updateStatus, escalateIssue } from '../../api/endpoints'
 import { StatusBadge, PriorityBadge } from '../../components/Badges'
 import toast from 'react-hot-toast'
@@ -6,12 +7,17 @@ import toast from 'react-hot-toast'
 const STATUS_OPTIONS = ['IN_PROGRESS','ACCEPTED','RESOLVED','REJECTED','CLOSED']
 
 export default function AssignedIssues() {
+  const navigate = useNavigate()
   const [issues, setIssues] = useState([])
   const [search, setSearch] = useState('')
   const [escalatingId, setEscalatingId] = useState(null)
   const [escalationReason, setEscalationReason] = useState('')
 
   useEffect(() => { reload() }, [])
+
+  const handleRowClick = (issueId) => {
+    navigate(`/issue/${issueId}/detail`)
+  }
 
   const reload = () => {
     getAssignedIssues().then((r) => setIssues(r.data.data))
@@ -54,7 +60,7 @@ export default function AssignedIssues() {
       />
       <div className="space-y-4">
         {filtered.map((issue) => (
-          <div key={issue.id} className="card">
+          <div key={issue.id} className="card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleRowClick(issue.id)}>
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -67,7 +73,7 @@ export default function AssignedIssues() {
                   Customer: {issue.customerName} · #{issue.id} · {new Date(issue.createdAt).toLocaleDateString()}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
                 {STATUS_OPTIONS.map((s) => (
                   <button
                     key={s}
@@ -94,7 +100,7 @@ export default function AssignedIssues() {
             </div>
 
             {escalatingId === issue.id && (
-              <div className="mt-4 flex gap-2 flex-wrap">
+              <div className="mt-4 flex gap-2 flex-wrap" onClick={(e) => e.stopPropagation()}>
                 <input
                   className="input flex-1 min-w-0"
                   placeholder="Reason for escalation..."

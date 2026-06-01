@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { getMyIssues } from '../../api/endpoints'
 import { StatusBadge, PriorityBadge } from '../../components/Badges'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function MyIssues() {
+  const navigate = useNavigate()
   const [issues, setIssues] = useState([])
   const [search, setSearch] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
@@ -17,6 +18,10 @@ export default function MyIssues() {
     const matchStatus = filterStatus ? i.status === filterStatus : true
     return matchSearch && matchStatus
   })
+
+  const handleRowClick = (issueId) => {
+    navigate(`/issue/${issueId}/detail`)
+  }
 
   return (
     <div className="space-y-5">
@@ -56,7 +61,7 @@ export default function MyIssues() {
           </thead>
           <tbody className="divide-y dark:divide-gray-700">
             {filtered.map((issue) => (
-              <tr key={issue.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <tr key={issue.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer" onClick={() => handleRowClick(issue.id)}>
                 <td className="py-3 pr-4 text-gray-400">#{issue.id}</td>
                 <td className="py-3 pr-4 font-medium">{issue.issueTitle}</td>
                 <td className="py-3 pr-4 text-gray-500">{issue.issueType?.replace('_',' ')}</td>
