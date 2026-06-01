@@ -50,6 +50,12 @@ public class Issue {
     @Column(columnDefinition = "TEXT")
     private String escalationReason;
 
+    @Column(columnDefinition = "TEXT")
+    private String solution;
+
+    @Column(columnDefinition = "TEXT")
+    private String managerNotes;
+
     @Column(nullable = false)
     @Builder.Default
     private boolean inQueue = false;

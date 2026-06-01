@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getQueueIssues, pullFromQueue } from '../../api/endpoints'
 import { PriorityBadge } from '../../components/Badges'
 import toast from 'react-hot-toast'
 
 export default function QueueIssues() {
+  const navigate = useNavigate()
   const [issues, setIssues] = useState([])
   const [search, setSearch] = useState('')
 
   useEffect(() => { reload() }, [])
+
+  const handleRowClick = (issueId) => {
+    navigate(`/issue/${issueId}/detail`)
+  }
 
   const reload = () => {
     getQueueIssues().then((r) => setIssues(r.data.data))
@@ -37,7 +43,7 @@ export default function QueueIssues() {
       />
       <div className="space-y-3">
         {filtered.map((issue) => (
-          <div key={issue.id} className="card flex items-start justify-between gap-4">
+          <div key={issue.id} className="card flex items-start justify-between gap-4 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleRowClick(issue.id)}>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-semibold">{issue.issueTitle}</span>
@@ -48,7 +54,7 @@ export default function QueueIssues() {
                 {issue.customerName} · {new Date(issue.createdAt).toLocaleString()}
               </p>
             </div>
-            <button className="btn-success text-sm whitespace-nowrap" onClick={() => handlePull(issue.id)}>
+            <button className="btn-success text-sm whitespace-nowrap" onClick={(e) => { e.stopPropagation(); handlePull(issue.id); }}>
               Pull & Assign
             </button>
           </div>

@@ -8,6 +8,9 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
 import Register from './pages/Register'
 
+// Issue Detail Page
+import IssueDetail from './pages/IssueDetail'
+
 // Customer Pages
 import CustomerDashboard from './pages/customer/CustomerDashboard'
 import CreateIssue from './pages/customer/CreateIssue'
@@ -68,6 +71,9 @@ function AppRoutes() {
         <Route path="/manager/escalated" element={<ProtectedRoute roles={['MANAGER']}><EscalatedIssues /></ProtectedRoute>} />
         <Route path="/manager/reports" element={<ProtectedRoute roles={['MANAGER']}><Reports /></ProtectedRoute>} />
         <Route path="/manager/performance" element={<ProtectedRoute roles={['MANAGER']}><CsrPerformance /></ProtectedRoute>} />
+
+        {/* Shared Routes */}
+        <Route path="/issue/:id/detail" element={<ProtectedRoute roles={['CUSTOMER', 'CSR', 'MANAGER']}><IssueDetail /></ProtectedRoute>} />
       </Route>
 
       {/* Default redirect */}

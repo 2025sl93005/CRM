@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS issues (
     customer_id BIGINT NOT NULL,
     assigned_csr_id BIGINT,
     escalation_reason LONGTEXT,
+    solution LONGTEXT,
+    manager_notes LONGTEXT,
     in_queue BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -94,3 +96,18 @@ INSERT INTO users (email, password, first_name, last_name, role) VALUES
 ('customer@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoHyeiCLMi2pCVfVFdIIRWN0MRfEu6rW8WgO', 'John', 'Customer', 'CUSTOMER'),
 ('csr@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoHyeiCLMi2pCVfVFdIIRWN0MRfEu6rW8WgO', 'Jane', 'CSR', 'CSR'),
 ('manager@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoHyeiCLMi2pCVfVFdIIRWN0MRfEu6rW8WgO', 'Bob', 'Manager', 'MANAGER');
+
+-- Activity Log Table
+CREATE TABLE IF NOT EXISTS issue_activity (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    issue_id BIGINT NOT NULL,
+    action_type VARCHAR(50) NOT NULL,
+    action_description LONGTEXT NOT NULL,
+    created_by BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (issue_id) REFERENCES issues(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+    INDEX idx_issue_id (issue_id),
+    INDEX idx_action_type (action_type),
+    INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

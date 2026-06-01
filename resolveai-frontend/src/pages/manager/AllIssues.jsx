@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getAllIssues, sendToQueue, getAllCsrs, assignIssue } from '../../api/endpoints'
 import { StatusBadge, PriorityBadge } from '../../components/Badges'
 import toast from 'react-hot-toast'
 
 export default function AllIssues() {
+  const navigate = useNavigate()
   const [issues, setIssues] = useState([])
   const [csrs, setCsrs] = useState([])
   const [search, setSearch] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
   const [assigningId, setAssigningId] = useState(null)
   const [selectedCsr, setSelectedCsr] = useState('')
+
+  const handleRowClick = (issueId) => {
+    navigate(`/issue/${issueId}/detail`)
+  }
 
   useEffect(() => {
     reload()
@@ -79,14 +85,14 @@ export default function AllIssues() {
           </thead>
           <tbody className="divide-y dark:divide-gray-700">
             {filtered.map((issue) => (
-              <tr key={issue.id}>
+              <tr key={issue.id} className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={() => handleRowClick(issue.id)}>
                 <td className="py-3 pr-4 text-gray-400">{issue.id}</td>
                 <td className="py-3 pr-4 font-medium max-w-xs truncate">{issue.issueTitle}</td>
                 <td className="py-3 pr-4 text-gray-500">{issue.customerName}</td>
                 <td className="py-3 pr-4"><StatusBadge status={issue.status} /></td>
                 <td className="py-3 pr-4"><PriorityBadge priority={issue.priority} /></td>
                 <td className="py-3 pr-4 text-gray-500">{issue.assignedCsrName || '—'}</td>
-                <td className="py-3 flex gap-1 flex-wrap">
+                <td className="py-3 flex gap-1 flex-wrap" onClick={(e) => e.stopPropagation()}>
                   {assigningId === issue.id ? (
                     <div className="flex gap-1">
                       <select className="input text-xs py-1 px-2" value={selectedCsr} onChange={(e) => setSelectedCsr(e.target.value)}>
