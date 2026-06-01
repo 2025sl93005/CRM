@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import toast from 'react-hot-toast';
 
-export default function ManagerNotesSection({ issueId, managerNotes, isEscalated, onNotesUpdated }) {
+export default function ManagerNotesSection({ issueId, managerNotes, isEscalated, escalationReason, onNotesUpdated }) {
   const [isEditing, setIsEditing] = useState(false);
   const [notesText, setNotesText] = useState(managerNotes || '');
   const [isSaving, setIsSaving] = useState(false);
@@ -92,6 +92,12 @@ export default function ManagerNotesSection({ issueId, managerNotes, isEscalated
         <span>🔸 Manager Input</span>
         <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Escalated Issue</span>
       </h3>
+
+      {/* Escalation Reason Display */}
+      <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <h4 className="font-semibold text-yellow-900 mb-2">Escalation Reason (from CSR)</h4>
+        <p className="text-gray-700 whitespace-pre-wrap">{escalationReason || 'No reason provided'}</p>
+      </div>
 
       {!isEditing ? (
         <>

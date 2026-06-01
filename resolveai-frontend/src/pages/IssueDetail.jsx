@@ -157,6 +157,7 @@ export default function IssueDetail() {
             <ManagerNotesSection
               issueId={issue.id}
               managerNotes={issue.managerNotes}
+              escalationReason={issue.escalationReason}
               isEscalated={issue.status === 'ESCALATED'}
               onNotesUpdated={handleCommentAdded}
             />

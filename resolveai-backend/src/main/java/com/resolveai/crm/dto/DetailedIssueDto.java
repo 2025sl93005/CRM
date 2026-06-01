@@ -24,6 +24,7 @@ public class DetailedIssueDto {
     private long commentCount;
     private String solution;
     private String managerNotes;
+    private String escalationReason;
 
     // Constructors
     public DetailedIssueDto() {}
@@ -187,5 +188,13 @@ public class DetailedIssueDto {
 
     public void setManagerNotes(String managerNotes) {
         this.managerNotes = managerNotes;
+    }
+
+    public String getEscalationReason() {
+        return escalationReason;
+    }
+
+    public void setEscalationReason(String escalationReason) {
+        this.escalationReason = escalationReason;
     }
 }

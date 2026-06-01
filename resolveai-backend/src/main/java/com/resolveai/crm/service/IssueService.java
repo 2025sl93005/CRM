@@ -292,6 +292,7 @@ public class IssueService {
         dto.setCommentCount(commentService.getCommentCount(issueId));
         dto.setSolution(issue.getSolution());
         dto.setManagerNotes(issue.getManagerNotes());
+        dto.setEscalationReason(issue.getEscalationReason());
 
         return dto;
     }
